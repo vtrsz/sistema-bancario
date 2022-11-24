@@ -1,15 +1,26 @@
 package org.mesttra.service;
 
+import org.mesttra.apagar.Cliente;
+import org.mesttra.apagar.ClienteDAO;
+import org.mesttra.apagar.ClientePF;
+import org.mesttra.apagar.ClientePJ;
+
 import java.io.IOException;
 import java.util.*;
 
 public class Menu{
 
-    Scanner input = new Scanner(System.in);
+    private static Scanner input = new Scanner(System.in);
 
-    List<Cliente> listaCliente = new ArrayList<>();
+    private static List<Cliente> listaCliente = new ArrayList<>();
 
-    public int inicio() {
+    private static ClienteDAO clienteDAO = new ClienteDAO;
+
+    public static void main(String[] args) {
+        while(inicio() !=9);
+    }
+
+    public static int inicio() {
         System.out.println("==== Menu Principal ====");
         System.out.println();
         System.out.println("1 - Cadastrar Cliente");
@@ -34,7 +45,7 @@ public class Menu{
 
     }
 
-    private void opcaoEscolhida(int entrada) {
+    private static void opcaoEscolhida(int entrada) {
 
         switch (entrada){
             case 1:
@@ -71,10 +82,9 @@ public class Menu{
         pressEnterToContinue();
         limpaConsole();
 
-
     }
 
-    private String entradaString(){
+    private static String entradaString(){
 
         String entrada;
 
@@ -88,7 +98,7 @@ public class Menu{
         return null;
     }
 
-    private double entradaDouble(){
+    private static double entradaDouble(){
 
         double entrada;
 
@@ -104,7 +114,7 @@ public class Menu{
         return 0;
     }
 
-    private int entradaInteiro() {
+    private static int entradaInteiro() {
 
         int entrada;
 
@@ -118,7 +128,7 @@ public class Menu{
         }
         return 0;
     }
-    public void cadastrarCliente() {
+    public static void cadastrarCliente() {
 
         System.out.println("===== Cadastro Cliente =====");
         int tipoCliente = getTipoCliente();
@@ -135,7 +145,7 @@ public class Menu{
         }
     }
 
-    private int getTipoCliente() {
+    private static int getTipoCliente() {
         System.out.println("Selecione uma opção: ");
         System.out.println("1 - Pessoa Física");
         System.out.println("2 - Pessoa Jurídica");
@@ -146,7 +156,7 @@ public class Menu{
         return entradaInteiro();
     }
 
-    public void cadastrarClientePF() {
+    public static void cadastrarClientePF() {
         System.out.println("===== Cadastro Cliente Pessoa Física =====");
 
         System.out.println("Digite abaixo os dados, conforme solicitado: ");
@@ -166,23 +176,17 @@ public class Menu{
         System.out.print("Limite de cheque especial: ");
         double limiteChequeEspecial = entradaDouble();
 
-        adicionaClienteLista(new ClientePF(cpf, nome, idade, telefone, limiteChequeEspecial) {
-        });
+        adicionaClienteLista(new ClientePF(cpf, nome, idade, telefone, limiteChequeEspecial));
 
         System.out.println("Cliente cadastrado com sucesso!");
     }
 
-    public void adicionaClienteLista(Cliente novoCliente){
+    public static void adicionaClienteLista(Cliente novoCliente){
 
-        for (int i=0; i<listaCliente.length; i++) {
-            if(listaCliente[i]==null){
-                listaCliente[i] = novoCliente;
-                break;
-            }
-        }
+
     }
 
-    public void cadastrarClientePJ() {
+    public static void cadastrarClientePJ() {
         System.out.println("===== Cadastro Cliente Pessoa Jurídica =====");
 
         System.out.println("Digite abaixo os dados, conforme solicitado: ");
@@ -217,7 +221,7 @@ public class Menu{
         System.out.println("Cliente cadastrado com sucesso!");
     }
 
-    public void removerCliente(){
+    public static void removerCliente(){
         System.out.println("==== Remover Cliente ====");
         int tipoCliente  = getTipoCliente();
 
@@ -244,7 +248,7 @@ public class Menu{
         if(!clienteRemovido) System.out.println("Cliente não existe!");
     }
 
-    public void consultarCliente(){
+    public static void consultarCliente(){
 
         System.out.println("===== Consulta de cliente ====");
         Cliente cliente = retornaCliente();
@@ -256,7 +260,7 @@ public class Menu{
         }
     }
 
-    private Cliente retornaCliente() {
+    private static Cliente retornaCliente() {
         int tipoCliente  = getTipoCliente();
 
         String opcaoCliente;
@@ -275,7 +279,7 @@ public class Menu{
         return null;
     }
 
-    private Cliente buscaCliente(int numeroConta, String tipoCliente){
+    private static Cliente buscaCliente(int numeroConta, String tipoCliente){
 
         for (Cliente cliente : listaCliente) {
 
@@ -287,7 +291,7 @@ public class Menu{
         return null;
     }
 
-    private boolean numeroContaExiste(int numeroConta, String tipoCliente){
+    private static boolean numeroContaExiste(int numeroConta, String tipoCliente){
 
         for (Cliente cliente : listaCliente) {
 
@@ -298,7 +302,7 @@ public class Menu{
         return false;
     }
 
-    public void alterarLimite(){
+    public static void alterarLimite(){
         System.out.println("==== Alterar limite cheque especial ====");
         Cliente cliente = retornaCliente();
 
@@ -323,7 +327,7 @@ public class Menu{
         }
     }
 
-    public void transferir(){
+    public static void transferir(){
         System.out.println("==== Transferência ====");
 
         System.out.println("Conta de origem: ");
@@ -361,7 +365,7 @@ public class Menu{
         }
     }
 
-    public void depositar(){
+    public static void depositar(){
         System.out.println("==== Deposito ====");
         Cliente cliente = retornaCliente();
 
@@ -381,7 +385,7 @@ public class Menu{
         }
     }
 
-    public void listarClientes(){
+    public static void listarClientes(){
 
         System.out.println("==== Lista de Clientes ====");
 
@@ -397,7 +401,7 @@ public class Menu{
         }
     }
 
-    public void sacar(){
+    public static void sacar(){
         System.out.println("==== Sacar ====");
 
         System.out.println("Conta do cliente: ");
@@ -424,7 +428,7 @@ public class Menu{
         }
     }
 
-    private void pressEnterToContinue(){
+    private static void pressEnterToContinue(){
         System.out.println("Pressione Enter duas vezes para continuar...");
         try
         {
