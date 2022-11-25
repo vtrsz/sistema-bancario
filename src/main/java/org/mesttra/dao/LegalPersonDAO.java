@@ -42,7 +42,6 @@ public class LegalPersonDAO {
         return true;
     }
 
-
     public static List<LegalPersonPOJO> getAllClients() {
         String query = "SELECT * FROM legal_person";
 
