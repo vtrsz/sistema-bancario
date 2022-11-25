@@ -50,8 +50,10 @@ public class LegalPersonDAO {
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet result = stmt.executeQuery();
+            if (result.next()) {
+                fillList(clients, result);
+            }
             stmt.close();
-            fillList(clients, result);
         } catch (Exception ex) {
             System.err.println("[ERROR] Não foi possivel obter a lista de pessoas jurídicas.");
             System.err.println(ex.getMessage());
