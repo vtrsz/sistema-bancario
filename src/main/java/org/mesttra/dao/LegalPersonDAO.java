@@ -17,7 +17,7 @@ public class LegalPersonDAO {
         connection = ConnectionFactory.getConnection();
     }
 
-    public static boolean insert(LegalPersonPOJO client) {
+    public boolean insert(LegalPersonPOJO client) {
         String query = "INSERT INTO " +
                 "legal_person (account_number, agency, phone_number, amount, over_draft, cnpj, social_reason, fantasy_name)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

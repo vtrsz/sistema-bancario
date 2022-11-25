@@ -18,7 +18,7 @@ public class NaturalPersonDAO {
         connection = ConnectionFactory.getConnection();
     }
 
-    public static boolean insert(NaturalPersonPOJO client) {
+    public boolean insert(NaturalPersonPOJO client) {
         String query = "INSERT INTO " +
                         "natural_person (account_number, agency, phone_number, amount, over_draft, cpf, name, age)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -44,6 +44,7 @@ public class NaturalPersonDAO {
     }
 
     public static List<NaturalPersonPOJO> getAllClients() {
+
         String query = "SELECT * FROM natural_person";
 
         List<NaturalPersonPOJO> clients = new ArrayList<>();
