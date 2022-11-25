@@ -21,6 +21,10 @@ public abstract class Client {
         this.overDraft = overDraft;
     }
 
+    public Client() {
+
+    }
+
     public int getAccountNumber() {
         return accountNumber;
     }

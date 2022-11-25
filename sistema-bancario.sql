@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS legal_person (
 	cnpj VARCHAR(14) NOT NULL,
 	social_reason VARCHAR(115) NOT NULL,
 	fantasy_name VARCHAR(55) NOT NULL
-)
+);
 
 CREATE TABLE IF NOT EXISTS natural_person (
 	account_number INTEGER NOT NULL,
@@ -18,4 +18,4 @@ CREATE TABLE IF NOT EXISTS natural_person (
 	cpf VARCHAR(11) NOT NULL,
 	name VARCHAR(100) NOT NULL,
 	age INTEGER NOT NULL
-)
+);

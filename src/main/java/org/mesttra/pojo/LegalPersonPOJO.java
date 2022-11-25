@@ -1,14 +1,18 @@
 package org.mesttra.pojo;
 
 
-public class LegalPerson extends Client {
+public class LegalPersonPOJO extends Client {
     private String cpnj, socialReason, fantasyName;
 
-    public LegalPerson(String phoneNumber, double overDraft, String cpnj, String socialReason, String fantasyName, String[] associateName) {
+    public LegalPersonPOJO(String phoneNumber, double overDraft, String cpnj, String socialReason, String fantasyName, String[] associateName) {
         super(phoneNumber, overDraft);
         this.cpnj = cpnj;
         this.socialReason = socialReason;
         this.fantasyName = fantasyName;
+    }
+
+    public LegalPersonPOJO() {
+        super();
     }
 
     public String getCpnj() {

@@ -1,14 +1,18 @@
 package org.mesttra.pojo;
 
-public class NaturalPerson extends Client {
+public class NaturalPersonPOJO extends Client {
     private String cpf, name;
     private int age;
 
-    public NaturalPerson(String phoneNumber, double overDraft, String cpf, String name, int age) {
+    public NaturalPersonPOJO(String phoneNumber, double overDraft, String cpf, String name, int age) {
         super(phoneNumber, overDraft);
         this.cpf = cpf;
         this.name = name;
         this.age = age;
+    }
+
+    public NaturalPersonPOJO() {
+        super();
     }
 
     public String getCpf() {
