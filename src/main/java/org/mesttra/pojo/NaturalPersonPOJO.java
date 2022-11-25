@@ -1,6 +1,6 @@
 package org.mesttra.pojo;
 
-public class NaturalPersonPOJO extends Client {
+public class NaturalPersonPOJO extends ClientPOJO {
     private String cpf, name;
     private int age;
 
