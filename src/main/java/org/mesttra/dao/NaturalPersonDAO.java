@@ -17,7 +17,7 @@ public class NaturalPersonDAO {
         connection = ConnectionFactory.getConnection();
     }
 
-    public static boolean insert(NaturalPersonPOJO client) {
+    public boolean insert(NaturalPersonPOJO client) {
         String query = "INSERT INTO " +
                         "natural_person (account_number, agency, phone_number, amount, over_draft, cpf, name, age)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -42,7 +42,7 @@ public class NaturalPersonDAO {
         return true;
     }
 
-    public static boolean remove(int accountNumber) {
+    public boolean remove(int accountNumber) {
         String query = "DELETE FROM natural_person WHERE account_number = ?";
 
         try {
@@ -58,7 +58,7 @@ public class NaturalPersonDAO {
         return true;
     }
 
-    public static List<NaturalPersonPOJO> getAllClients() {
+    public List<NaturalPersonPOJO> getAllClients() {
         String query = "SELECT * FROM natural_person";
 
         List<NaturalPersonPOJO> clients = new ArrayList<>();
@@ -75,7 +75,7 @@ public class NaturalPersonDAO {
         return clients;
     }
 
-    public static NaturalPersonPOJO findClientByAccountNumber(int accountNumber) {
+    public NaturalPersonPOJO findClientByAccountNumber(int accountNumber) {
         String query = "SELECT * FROM natural_person WHERE account_number = ?";
 
         NaturalPersonPOJO client = null;
@@ -92,7 +92,7 @@ public class NaturalPersonDAO {
         return client;
     }
 
-    public static boolean updateOverDraft(int accountNumber, double value) {
+    public boolean updateOverDraft(int accountNumber, double value) {
         String query = "UPDATE natural_person SET over_draft = ? WHERE account_number = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -107,7 +107,7 @@ public class NaturalPersonDAO {
         return true;
     }
 
-    public static boolean transferAmount(int fromAccountNumber, int toAccountNumber, double value) {
+    public boolean transferAmount(int fromAccountNumber, int toAccountNumber, double value) {
         String query = "UPDATE natural_person SET amount = amount - ? WHERE account_number = ?";
         String query2 = "UPDATE natural_person SET amount = amount + ? WHERE account_number = ?";
 
@@ -130,7 +130,7 @@ public class NaturalPersonDAO {
         return true;
     }
 
-    public static boolean addAmount(int accountNumber, double value) {
+    public boolean addAmount(int accountNumber, double value) {
         String query = "UPDATE natural_person SET amount = amount + ? WHERE account_number = ?";
 
         try {

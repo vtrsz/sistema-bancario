@@ -16,7 +16,7 @@ public class LegalPersonDAO {
         connection = ConnectionFactory.getConnection();
     }
 
-    public static boolean insert(LegalPersonPOJO client) {
+    public boolean insert(LegalPersonPOJO client) {
         String query = "INSERT INTO " +
                 "legal_person (account_number, agency, phone_number, amount, over_draft, cnpj, social_reason, fantasy_name)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -41,7 +41,7 @@ public class LegalPersonDAO {
         return true;
     }
 
-    public static boolean remove(int accountNumber) {
+    public boolean remove(int accountNumber) {
         String query = "DELETE FROM legal_person WHERE account_number = ?";
 
         try {
@@ -57,7 +57,7 @@ public class LegalPersonDAO {
         return true;
     }
 
-    public static List<LegalPersonPOJO> getAllClients() {
+    public List<LegalPersonPOJO> getAllClients() {
         String query = "SELECT * FROM legal_person";
 
         List<LegalPersonPOJO> clients = new ArrayList<>();
@@ -74,7 +74,7 @@ public class LegalPersonDAO {
         return clients;
     }
 
-    public static LegalPersonPOJO findClientByAccountNumber(int accountNumber) {
+    public LegalPersonPOJO findClientByAccountNumber(int accountNumber) {
         String query = "SELECT * FROM legal_person WHERE account_number = ?";
 
         LegalPersonPOJO client = null;
@@ -91,7 +91,7 @@ public class LegalPersonDAO {
         return client;
     }
 
-    public static boolean updateOverDraft(int accountNumber, double value) {
+    public boolean updateOverDraft(int accountNumber, double value) {
         String query = "UPDATE legal_person SET over_draft = ? WHERE account_number = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -106,7 +106,7 @@ public class LegalPersonDAO {
         return true;
     }
 
-    public static boolean transferAmount(int fromAccountNumber, int toAccountNumber, double value) {
+    public boolean transferAmount(int fromAccountNumber, int toAccountNumber, double value) {
         String query = "UPDATE legal_person SET amount = amount - ? WHERE account_number = ?";
         String query2 = "UPDATE legal_person SET amount = amount + ? WHERE account_number = ?";
 
@@ -129,7 +129,7 @@ public class LegalPersonDAO {
         return true;
     }
 
-    public static boolean addAmount(int accountNumber, double value) {
+    public boolean addAmount(int accountNumber, double value) {
         String query = "UPDATE legal_person SET amount = amount + ? WHERE account_number = ?";
 
         try {

@@ -1,9 +1,10 @@
 package org.mesttra.service;
 
-import org.mesttra.apagar.Cliente;
-import org.mesttra.apagar.ClienteDAO;
-import org.mesttra.apagar.ClientePF;
-import org.mesttra.apagar.ClientePJ;
+import org.mesttra.dao.LegalPersonDAO;
+import org.mesttra.dao.NaturalPersonDAO;
+import org.mesttra.pojo.Client;
+import org.mesttra.pojo.LegalPersonPOJO;
+import org.mesttra.pojo.NaturalPersonPOJO;
 
 import java.io.IOException;
 import java.util.*;
@@ -12,9 +13,11 @@ public class Menu{
 
     private static Scanner input = new Scanner(System.in);
 
-    private static List<Cliente> listaCliente = new ArrayList<>();
+    private static List<Client> listaCliente = new ArrayList<>();
 
-    private static ClienteDAO clienteDAO = new ClienteDAO;
+    private static LegalPersonDAO legalPersonDAO = new LegalPersonDAO();
+
+    private static NaturalPersonDAO naturalPersonDAO = new NaturalPersonDAO();
 
     public static void main(String[] args) {
         while(inicio() !=9);
@@ -29,8 +32,8 @@ public class Menu{
         System.out.println("4 - Alterar Limite");
         System.out.println("5 - Transferir");
         System.out.println("6 - Depositar");
-        System.out.println("7 - Relatório de Clientes");
-        System.out.println("8 - Sacar");
+        System.out.println("7 - Listar todos clientes");
+        System.out.println("8 - Buscar cliente por numero da conta");
         System.out.println("9 - Sair");
         System.out.println();
         System.out.println("==========================");
@@ -47,37 +50,17 @@ public class Menu{
 
     private static void opcaoEscolhida(int entrada) {
 
-        switch (entrada){
-            case 1:
-                cadastrarCliente();
-                break;
-            case 2:
-                removerCliente();
-                break;
-            case 3:
-                consultarCliente();
-                break;
-            case 4:
-                alterarLimite();
-                break;
-            case 5:
-                transferir();
-                break;
-            case 6:
-                depositar();
-                break;
-            case 7:
-                listarClientes();
-                break;
-            case 8:
-                sacar();
-                break;
-            case 9:
-                System.out.println("Obrigado por utilizar nosso sistema!");
-                break;
-            default:
-                System.out.println("Opção inserida inválida!");
-
+        switch (entrada) {
+            case 1 -> cadastrarCliente();
+            case 2 -> removerCliente();
+            case 3 -> listarTodosClientes();
+            case 4 -> alterarLimite();
+            case 5 -> transferir();
+            case 6 -> depositar();
+            case 7 -> listarTodosClientes();
+            case 8 -> listarClientePorNumeroConta();
+            case 9 -> System.out.println("Obrigado por utilizar nosso sistema!");
+            default -> System.out.println("Opção inserida inválida!");
         }
         pressEnterToContinue();
         limpaConsole();
@@ -165,26 +148,22 @@ public class Menu{
         String cpf = entradaString();
 
         System.out.print("Nome: ");
-        String nome = entradaString();
+        String name = entradaString();
 
         System.out.print("Idade: ");
-        int idade = entradaInteiro();
+        int age = entradaInteiro();
 
         System.out.print("Telefone: ");
-        String telefone = entradaString();
+        String phoneNumber = entradaString();
 
         System.out.print("Limite de cheque especial: ");
-        double limiteChequeEspecial = entradaDouble();
+        double overDraft = entradaDouble();
 
-        adicionaClienteLista(new ClientePF(cpf, nome, idade, telefone, limiteChequeEspecial));
+         naturalPersonDAO.insert(new NaturalPersonPOJO(phoneNumber, overDraft, cpf, name, age));
 
         System.out.println("Cliente cadastrado com sucesso!");
     }
 
-    public static void adicionaClienteLista(Cliente novoCliente){
-
-
-    }
 
     public static void cadastrarClientePJ() {
         System.out.println("===== Cadastro Cliente Pessoa Jurídica =====");
@@ -192,240 +171,126 @@ public class Menu{
         System.out.println("Digite abaixo os dados, conforme solicitado: ");
 
         System.out.print("CNPJ: ");
-        String cnpj = entradaString();
-
-        System.out.print("Digite o número de Sócios: ");
-        int numeroSocio = entradaInteiro();
-
-        String[] nomeSocio = new String[numeroSocio];
-
-        for(int i = 0; i<numeroSocio; i++){
-            System.out.print("Digite o nome do sócio n° " + (i+1) + " : ");
-            nomeSocio[i] = entradaString();
-        }
+        String cpnj = entradaString();
 
         System.out.print("Nome social: ");
-        String nomeSocial = entradaString();
+        String socialReason = entradaString();
 
         System.out.print("Nome fantasia: ");
-        String nomeFantasia = entradaString();
+        String fantasyName = entradaString();
 
         System.out.print("Telefone: ");
-        String telefone = entradaString();
+        String phoneNumber = entradaString();
 
         System.out.print("Limite de cheque especial: ");
-        double limiteChequeEspecial = entradaDouble();
+        double overDraft = entradaDouble();
 
-        adicionaClienteLista(new ClientePJ(cnpj, nomeSocio, nomeSocial, nomeFantasia, telefone, limiteChequeEspecial));
+        legalPersonDAO.insert(new LegalPersonPOJO(phoneNumber, overDraft, cpnj, socialReason, fantasyName));
 
         System.out.println("Cliente cadastrado com sucesso!");
     }
 
-    public static void removerCliente(){
+    public static void removerCliente() {
         System.out.println("==== Remover Cliente ====");
-        int tipoCliente  = getTipoCliente();
+        int tipoCliente = getTipoCliente();
 
         String opcaoCliente;
-
-        if(tipoCliente == 1){
-            opcaoCliente = "PF";
-        } else{
-            opcaoCliente = "PJ";
-        }
 
         System.out.print("Digite o número da conta: ");
         int numeroConta = entradaInteiro();
-        boolean clienteRemovido = false;
 
-        for(int i= 0; i<listaCliente.length; i++){
-            if((listaCliente[i] != null) && (listaCliente[i].getNumeroConta() == numeroConta && listaCliente[i].getTipoConta().equalsIgnoreCase(opcaoCliente))){
-                listaCliente[i]=null;
-                System.out.println("Cliente removido com sucesso!");
-                clienteRemovido = true;
-                break;
-            }
-        }
-        if(!clienteRemovido) System.out.println("Cliente não existe!");
-    }
-
-    public static void consultarCliente(){
-
-        System.out.println("===== Consulta de cliente ====");
-        Cliente cliente = retornaCliente();
-
-        if(cliente!=null){
-            System.out.println(cliente.toString());
+        if (tipoCliente == 1) {
+            naturalPersonDAO.remove(numeroConta);
         } else {
-            System.out.println("Cliente não existe!");
+            legalPersonDAO.remove(numeroConta);
         }
     }
 
-    private static Cliente retornaCliente() {
-        int tipoCliente  = getTipoCliente();
+    public static void listarTodosClientes(){
+        System.out.println("===== Listar todos os clientes ====");
+        int tipoCliente = getTipoCliente();
 
-        String opcaoCliente;
-
-        if(tipoCliente == 1){
-            opcaoCliente = "PF";
-        } else{
-            opcaoCliente = "PJ";
+        if(tipoCliente==1){
+           naturalPersonDAO.getAllClients().forEach(System.out::println);
+        }else{
+            legalPersonDAO.getAllClients().forEach(System.out::println);
         }
-        System.out.print("Digite o número da conta do cliente: ");
+    }
+
+    public static void listarClientePorNumeroConta(){
+        System.out.println("==== Listar Clientes por numero da Conta ====");
+        int tipoCliente = getTipoCliente();
+
+
+        System.out.print("Digite o número da conta: ");
         int numeroConta = entradaInteiro();
 
-        if(numeroContaExiste(numeroConta, opcaoCliente)){
-            return buscaCliente(numeroConta, opcaoCliente);
+        if(tipoCliente==1){
+            NaturalPersonPOJO naturalPersonPOJO = naturalPersonDAO.findClientByAccountNumber(numeroConta);
+            System.out.println(naturalPersonPOJO);
+        } else{
+            LegalPersonPOJO legalPersonPOJO = legalPersonDAO.findClientByAccountNumber(numeroConta);
+            System.out.println(legalPersonPOJO);
         }
-        return null;
-    }
 
-    private static Cliente buscaCliente(int numeroConta, String tipoCliente){
-
-        for (Cliente cliente : listaCliente) {
-
-            if (cliente != null && cliente.getNumeroConta() == numeroConta && cliente.getTipoConta().equalsIgnoreCase(tipoCliente)) {
-                return cliente;
-            }
-
-        }
-        return null;
-    }
-
-    private static boolean numeroContaExiste(int numeroConta, String tipoCliente){
-
-        for (Cliente cliente : listaCliente) {
-
-            if (cliente != null && cliente.getNumeroConta() == numeroConta && cliente.getTipoConta().equalsIgnoreCase(tipoCliente)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void alterarLimite(){
         System.out.println("==== Alterar limite cheque especial ====");
-        Cliente cliente = retornaCliente();
+        int tipoCliente = getTipoCliente();
 
-        if(cliente != null) {
-            System.out.print("Digite o novo limite de cheque especial: ");
-            double novoLimite = entradaDouble();
+        System.out.print("Digite o número da conta: ");
+        int numeroConta = entradaInteiro();
 
-            if(cliente.getSaldo()<0 && Math.abs(cliente.getSaldo()) > cliente.getLimiteChequeEspecial()){
-                System.out.println("O valor em uso do cheque especial é superior ao novo limite");
-                cliente = null;
-            }
+        System.out.print("Digite o novo valor do cheque especial: ");
+        double novoValorChequeEspecial = entradaDouble();
 
-            while (novoLimite<0){
-                System.out.println("Insira um valor positivo!");
-                System.out.print("Digite o novo limite de cheque especial: ");
-                novoLimite = entradaDouble();
-            }
-            cliente.setLimiteChequeEspecial(novoLimite);
-            System.out.println("Limite alterado com sucesso!");
-        } else {
-            System.out.println("Transação cancelada!");
+        if(tipoCliente==1){
+           naturalPersonDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
+
+        } else{
+            legalPersonDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
         }
+
     }
 
     public static void transferir(){
         System.out.println("==== Transferência ====");
 
-        System.out.println("Conta de origem: ");
-        Cliente origem = retornaCliente();
-
-        System.out.println("Conta de destino: ");
-        Cliente destino  = retornaCliente();
-
-        boolean contaExiste = origem!=null && destino!=null;
-
-        if(contaExiste && ( origem.getNumeroConta() == destino.getNumeroConta()) && origem.getTipoConta().equalsIgnoreCase(destino.getTipoConta())){
-            System.out.println("As contas precisam ser diferentes!");
-            contaExiste = false;
-        }
-
-        double valorTransferencia =0;
-
-        if(contaExiste){
-            System.out.print("Valor a ser transferido: ");
-            valorTransferencia = entradaDouble();
-        }
+        System.out.println("Conta de origem");
+        int tipoClienteOrigem = getTipoCliente();
+        System.out.print("Numero da conta: ");
+        int numeroContaOrigem = entradaInteiro();
 
 
-        if(contaExiste && origem.getSaldo() + origem.getLimiteChequeEspecial() < valorTransferencia){
-            System.out.println("Saldo insuficiente!");
-        } else if(contaExiste){
+        System.out.println("Conta de destino");
+        int tipoClienteDestino = getTipoCliente();
+        System.out.print("Numero da conta: ");
+        int numeroContaDestino = entradaInteiro();
 
-            origem.setSaldo(origem.getSaldo()-valorTransferencia);
+        System.out.print("Valor a ser transferido: ");
+        double valorTransferencia = entradaDouble();
 
-            destino.setSaldo(destino.getSaldo()+valorTransferencia);
+        //TODO transferencia entre contas PF e PJ
 
-            System.out.println("Transferência concluída!");
-        } else {
-            System.out.println("Transação cancelada!");
-        }
     }
 
     public static void depositar(){
         System.out.println("==== Deposito ====");
-        Cliente cliente = retornaCliente();
+        int tipoCliente = getTipoCliente();
 
-        if(cliente != null){
-            System.out.print("Valor a ser depositado: ");
-            double valorDeposito = entradaDouble();
+        System.out.print("Digite o número da conta: ");
+        int numeroConta = entradaInteiro();
 
-            if(valorDeposito<0){
-                System.out.println("Valor inserido inválido!");
-                cliente = null;
-            }
-            cliente.setSaldo(cliente.getSaldo() + valorDeposito);
+        System.out.print("Digite o valor ");
+        double valorDeposito = entradaDouble();
 
-            System.out.println("Deposito efetuado!");
-        } else {
-            System.out.println("Transação cancelada!");
-        }
-    }
-
-    public static void listarClientes(){
-
-        System.out.println("==== Lista de Clientes ====");
-
-        Arrays.sort(listaCliente, new comparatorTipoNumeroConta());
-
-        for(Cliente cliente :
-                listaCliente) {
-            if(cliente!=null) {
-                System.out.println("Cliente " + cliente.getTipoConta() + " " + cliente.numeroConta + ":" );
-                System.out.println(cliente.toString());
-
-            }
-        }
-    }
-
-    public static void sacar(){
-        System.out.println("==== Sacar ====");
-
-        System.out.println("Conta do cliente: ");
-        Cliente cliente = retornaCliente();
-
-        boolean contaExiste = cliente!=null;
-
-        double valorSaque=0;
-
-        if(contaExiste) {
-            System.out.print("Valor a ser sacado: ");
-            valorSaque = entradaDouble();
+        if(tipoCliente==1){
+            naturalPersonDAO.addAmount(numeroConta, valorDeposito);
+        } else{
+            legalPersonDAO.addAmount(numeroConta, valorDeposito);
         }
 
-        if(contaExiste && cliente.getSaldo() + cliente.getLimiteChequeEspecial() < valorSaque){
-            System.out.println("Saldo insuficiente!");
-        } else if(contaExiste){
-
-            cliente.setSaldo(cliente.getSaldo()-valorSaque);
-
-            System.out.println("Saque concluído!");
-        } else {
-            System.out.println("Transação cancelada!");
-        }
     }
 
     private static void pressEnterToContinue(){
