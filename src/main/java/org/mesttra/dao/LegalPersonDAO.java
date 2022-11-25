@@ -2,6 +2,8 @@ package org.mesttra.dao;
 
 import org.mesttra.factory.ConnectionFactory;
 import org.mesttra.pojo.LegalPersonPOJO;
+import org.mesttra.service.Operations;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -83,10 +85,12 @@ public class LegalPersonDAO {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, accountNumber);
             ResultSet result = stmt.executeQuery();
+            if (result.next()) {
+                client = fillClient(result);
+            }
             stmt.close();
-            client = fillClient(result);
         } catch (Exception ex) {
-            System.out.println("Não foi possível identificar nenhum cliente com este numero de conta!");
+            System.err.println("Não foi possível identificar nenhum cliente com este numero de conta!");
         }
         return client;
     }
@@ -100,30 +104,32 @@ public class LegalPersonDAO {
             stmt.execute();
             stmt.close();
         } catch (Exception ex) {
-            System.out.println("Não foi possível atualizar o limite do cheque especial!");
+            System.err.println("Não foi possível atualizar o limite do cheque especial!");
             return false;
         }
         return true;
     }
 
     public static boolean transferAmount(int fromAccountNumber, int toAccountNumber, double value) {
-        String query = "UPDATE legal_person SET amount = amount - ? WHERE account_number = ?";
-        String query2 = "UPDATE legal_person SET amount = amount + ? WHERE account_number = ?";
+        String strQuery = "UPDATE $tableName SET amount = amount - ? WHERE account_number = ?";
+        String strQuery2 = "UPDATE $tableName SET amount = amount + ? WHERE account_number = ?";
 
         try {
+            String query = strQuery.replace("$tableName", Operations.getClientTypeByAccountNumber(fromAccountNumber));
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setDouble(1, value);
             stmt.setInt(2, fromAccountNumber);
             stmt.execute();
             stmt.close();
 
+            String query2 = strQuery.replace("$tableName", Operations.getClientTypeByAccountNumber(toAccountNumber));
             stmt = connection.prepareStatement(query2);
             stmt.setDouble(1, value);
             stmt.setInt(2, toAccountNumber);
             stmt.execute();
             stmt.close();
         } catch (Exception ex) {
-            System.out.println("Não foi possível realizar a transferência!");
+            System.err.println("Não foi possível realizar a transferência!");
             return false;
         }
         return true;
@@ -139,7 +145,7 @@ public class LegalPersonDAO {
             stmt.execute();
             stmt.close();
         } catch (Exception ex) {
-            System.out.println("Não foi possível adicionar saldo nesta conta!");
+            System.err.println("Não foi possível adicionar saldo nesta conta!");
             return false;
         }
         return true;
@@ -153,8 +159,8 @@ public class LegalPersonDAO {
         client.setPhoneNumber(result.getString("phone_number"));
         client.setAmount(result.getDouble("amount"));
         client.setOverDraft(result.getDouble("over_draft"));
-        client.setSocialReason(result.getString("socialReason"));
-        client.setFantasyName(result.getString("fantasyName"));
+        client.setSocialReason(result.getString("social_reason"));
+        client.setFantasyName(result.getString("fantasy_name"));
         return client;
     }
 
