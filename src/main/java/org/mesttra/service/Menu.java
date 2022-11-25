@@ -1,8 +1,9 @@
 package org.mesttra.service;
 
+import org.mesttra.dao.ClientDAO;
 import org.mesttra.dao.LegalPersonDAO;
 import org.mesttra.dao.NaturalPersonDAO;
-import org.mesttra.pojo.Client;
+import org.mesttra.pojo.ClientPOJO;
 import org.mesttra.pojo.LegalPersonPOJO;
 import org.mesttra.pojo.NaturalPersonPOJO;
 
@@ -13,11 +14,13 @@ public class Menu{
 
     private static Scanner input = new Scanner(System.in);
 
-    private static List<Client> listaCliente = new ArrayList<>();
+    private static List<ClientPOJO> listaCliente = new ArrayList<>();
 
     private static LegalPersonDAO legalPersonDAO = new LegalPersonDAO();
 
     private static NaturalPersonDAO naturalPersonDAO = new NaturalPersonDAO();
+
+    private static ClientDAO clientDAO = new ClientDAO();
 
     public static void main(String[] args) {
         while(inicio() !=9);
@@ -199,11 +202,8 @@ public class Menu{
         System.out.print("Digite o número da conta: ");
         int numeroConta = entradaInteiro();
 
-        if (tipoCliente == 1) {
-            naturalPersonDAO.remove(numeroConta);
-        } else {
-            legalPersonDAO.remove(numeroConta);
-        }
+        ClientDAO.remove(numeroConta);
+
     }
 
     public static void listarTodosClientes(){
@@ -245,33 +245,23 @@ public class Menu{
         System.out.print("Digite o novo valor do cheque especial: ");
         double novoValorChequeEspecial = entradaDouble();
 
-        if(tipoCliente==1){
-           naturalPersonDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
-
-        } else{
-            legalPersonDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
-        }
+       ClientDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
 
     }
 
     public static void transferir(){
         System.out.println("==== Transferência ====");
 
-        System.out.println("Conta de origem");
-        int tipoClienteOrigem = getTipoCliente();
-        System.out.print("Numero da conta: ");
+        System.out.print("Numero da conta origem: ");
         int numeroContaOrigem = entradaInteiro();
 
-
-        System.out.println("Conta de destino");
-        int tipoClienteDestino = getTipoCliente();
-        System.out.print("Numero da conta: ");
+        System.out.print("Numero da conta destino: ");
         int numeroContaDestino = entradaInteiro();
 
         System.out.print("Valor a ser transferido: ");
         double valorTransferencia = entradaDouble();
 
-        //TODO transferencia entre contas PF e PJ
+        ClientDAO.transferAmount(numeroContaDestino, numeroContaDestino, valorTransferencia);
 
     }
 
@@ -285,11 +275,7 @@ public class Menu{
         System.out.print("Digite o valor ");
         double valorDeposito = entradaDouble();
 
-        if(tipoCliente==1){
-            naturalPersonDAO.addAmount(numeroConta, valorDeposito);
-        } else{
-            legalPersonDAO.addAmount(numeroConta, valorDeposito);
-        }
+        ClientDAO.addAmount(numeroConta, valorDeposito);
 
     }
 

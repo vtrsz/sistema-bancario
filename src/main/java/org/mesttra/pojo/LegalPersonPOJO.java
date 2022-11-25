@@ -1,7 +1,7 @@
 package org.mesttra.pojo;
 
 
-public class LegalPersonPOJO extends Client {
+public class LegalPersonPOJO extends ClientPOJO {
     private String cpnj, socialReason, fantasyName;
 
     public LegalPersonPOJO(String phoneNumber, double overDraft, String cpnj, String socialReason, String fantasyName) {

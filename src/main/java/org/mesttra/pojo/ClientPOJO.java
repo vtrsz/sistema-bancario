@@ -4,7 +4,7 @@ package org.mesttra.pojo;
     Os clientes, independente do tipo, tem um número de conta, agência, telefone, saldo e limite de cheque especial.
 */
 
-public abstract class Client {
+public abstract class ClientPOJO {
     private static int SEQUENTIAL = 1;
     private static final int DEFAULT_AGENCY = 1;
     private static final int START_AMOUNT = 0;
@@ -13,7 +13,7 @@ public abstract class Client {
     private double amount;
     private double overDraft;
 
-    public Client(String phoneNumber, double overDraft) {
+    public ClientPOJO(String phoneNumber, double overDraft) {
         this.accountNumber = SEQUENTIAL++;
         this.agency = DEFAULT_AGENCY;
         this.phoneNumber = phoneNumber;
@@ -21,8 +21,7 @@ public abstract class Client {
         this.overDraft = overDraft;
     }
 
-    public Client() {
-
+    public ClientPOJO() {
     }
 
     public int getAccountNumber() {
