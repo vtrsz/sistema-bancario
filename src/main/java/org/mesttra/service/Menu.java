@@ -22,9 +22,6 @@ public class Menu{
 
     private static ClientDAO clientDAO = new ClientDAO();
 
-    public static void main(String[] args) {
-        while(inicio() !=9);
-    }
 
     public static int inicio() {
         System.out.println("==== Menu Principal ====");
