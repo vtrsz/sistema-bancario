@@ -11,6 +11,10 @@ public class LegalPersonPOJO extends Client {
         this.fantasyName = fantasyName;
     }
 
+    public LegalPersonPOJO() {
+        super();
+    }
+
     public String getCpnj() {
         return cpnj;
     }
