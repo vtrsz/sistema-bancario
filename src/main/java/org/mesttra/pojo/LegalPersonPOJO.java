@@ -48,7 +48,7 @@ public class LegalPersonPOJO extends ClientPOJO {
                 "OverDraft: " + super.getOverDraft() + " " +
                 "CNPJ: " + this.cpnj + " " +
                 "SocialReason: " + this.socialReason + " " +
-                "FantasyName: " + this.fantasyName + " " + "]"
+                "FantasyName: " + this.fantasyName + "]"
         );
     }
 }

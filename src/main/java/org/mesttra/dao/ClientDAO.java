@@ -13,9 +13,6 @@ public class ClientDAO {
     public ClientDAO() { connection = ConnectionFactory.getConnection(); }
 
     public static int getHigherValue(int x, int y) {
-        if (x == 0 && y == 0) {
-            System.out.println("ESTA FUNCIONANDO");
-        }
         try {
             if (x > y) {
                 return x;

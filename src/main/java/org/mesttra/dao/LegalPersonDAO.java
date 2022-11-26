@@ -50,9 +50,7 @@ public class LegalPersonDAO {
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet result = stmt.executeQuery();
-            if (result.next()) {
-                fillList(clients, result);
-            }
+            fillList(clients, result);
             stmt.close();
         } catch (Exception ex) {
             System.err.println("[ERROR] Não foi possivel obter a lista de pessoas jurídicas.");
@@ -88,6 +86,7 @@ public class LegalPersonDAO {
         client.setPhoneNumber(result.getString("phone_number"));
         client.setAmount(result.getDouble("amount"));
         client.setOverDraft(result.getDouble("over_draft"));
+        client.setCpnj(result.getString("cnpj"));
         client.setSocialReason(result.getString("social_reason"));
         client.setFantasyName(result.getString("fantasy_name"));
         return client;

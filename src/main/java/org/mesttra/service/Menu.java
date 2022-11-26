@@ -7,6 +7,7 @@ import org.mesttra.pojo.ClientPOJO;
 import org.mesttra.pojo.LegalPersonPOJO;
 import org.mesttra.pojo.NaturalPersonPOJO;
 
+import java.awt.desktop.SystemSleepEvent;
 import java.io.IOException;
 import java.util.*;
 
@@ -207,32 +208,15 @@ public class Menu{
 
         List<ClientPOJO> clientes = new ArrayList<>();
 
-        List<NaturalPersonPOJO> naturalPersonPOJOS = naturalPersonDAO.getAllClients();
-        List<LegalPersonPOJO> legalPersonPOJOS = legalPersonDAO.getAllClients();
-
-        for (ClientPOJO cliente : naturalPersonPOJOS) {
-            clientes.add(cliente);
-        }
-
-        for (ClientPOJO cliente : legalPersonPOJOS) {
-            clientes.add(cliente);
-        }
-
-        for (ClientPOJO cliente : clientes
-             ) {
-            System.out.println(cliente.ToString());
-        }
-
-//        clientes.addAll(naturalPersonDAO.getAllClients());
-//        clientes.addAll(legalPersonDAO.getAllClients());
-////        clientes.sort(new Comparator<ClientPOJO>() {
-//            @Override
-//            public int compare(ClientPOJO client1, ClientPOJO cliente2) {
-//                return Integer.compare(client1.getAccountNumber(), cliente2.getAccountNumber());
-//            }
-//        });
-
-//        clientes.forEach(cliente -> System.out.println(cliente.ToString()));
+        clientes.addAll(naturalPersonDAO.getAllClients());
+        clientes.addAll(legalPersonDAO.getAllClients());
+        clientes.sort(new Comparator<ClientPOJO>() {
+            @Override
+            public int compare(ClientPOJO client1, ClientPOJO cliente2) {
+                return Integer.compare(client1.getAccountNumber(), cliente2.getAccountNumber());
+            }
+        });
+        clientes.forEach(cliente -> System.out.println(cliente.ToString()));
 
     }
 
