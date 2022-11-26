@@ -4,8 +4,9 @@ package org.mesttra.pojo;
     Os clientes, independente do tipo, tem um número de conta, agência, telefone, saldo e limite de cheque especial.
 */
 
+import org.mesttra.dao.ClientDAO;
+
 public abstract class ClientPOJO {
-    private static int SEQUENTIAL = 1;
     private static final int DEFAULT_AGENCY = 1;
     private static final int START_AMOUNT = 0;
     private int accountNumber, agency;
@@ -14,7 +15,7 @@ public abstract class ClientPOJO {
     private double overDraft;
 
     public ClientPOJO(String phoneNumber, double overDraft) {
-        this.accountNumber = SEQUENTIAL++;
+        this.accountNumber = ClientDAO.getNextAccountNumber();
         this.agency = DEFAULT_AGENCY;
         this.phoneNumber = phoneNumber;
         this.amount = START_AMOUNT;

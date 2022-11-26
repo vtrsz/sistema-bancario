@@ -159,7 +159,7 @@ public class Menu{
         System.out.print("Limite de cheque especial: ");
         double overDraft = entradaDouble();
 
-         naturalPersonDAO.insert(new NaturalPersonPOJO(phoneNumber, overDraft, cpf, name, age));
+        naturalPersonDAO.insert(new NaturalPersonPOJO(phoneNumber, overDraft, cpf, name, age));
 
         System.out.println("Cliente cadastrado com sucesso!");
     }
@@ -208,7 +208,7 @@ public class Menu{
         int tipoCliente = getTipoCliente();
 
         if(tipoCliente==1){
-           naturalPersonDAO.getAllClients().forEach((cliente) -> System.out.println(cliente.ToString()));
+            naturalPersonDAO.getAllClients().forEach((cliente) -> System.out.println(cliente.ToString()));
         }else{
             legalPersonDAO.getAllClients().forEach((cliente) -> System.out.println(cliente.ToString()));
         }
@@ -242,7 +242,7 @@ public class Menu{
         System.out.print("Digite o novo valor do cheque especial: ");
         double novoValorChequeEspecial = entradaDouble();
 
-       ClientDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
+        ClientDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
 
     }
 

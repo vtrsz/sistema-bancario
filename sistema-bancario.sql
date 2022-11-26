@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS legal_person (
-	account_number INTEGER NOT NULL,
+	account_number INTEGER NOT NULL PRIMARY KEY,
 	agency INTEGER NOT NULL,
 	phone_number VARCHAR(15) NOT NULL,
 	amount NUMERIC(11, 2) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS legal_person (
 );
 
 CREATE TABLE IF NOT EXISTS natural_person (
-	account_number INTEGER NOT NULL,
+	account_number INTEGER NOT NULL PRIMARY KEY,
 	agency INTEGER NOT NULL,
 	phone_number VARCHAR(15) NOT NULL,
 	amount NUMERIC(11, 2) NOT NULL,

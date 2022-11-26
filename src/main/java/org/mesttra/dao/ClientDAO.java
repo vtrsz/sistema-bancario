@@ -5,11 +5,54 @@ import org.mesttra.service.Operations;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class ClientDAO {
     private static Connection connection;
 
     public ClientDAO() { connection = ConnectionFactory.getConnection(); }
+
+    public static int getHigherValue(int x, int y) {
+        if (x == 0 && y == 0) {
+            System.out.println("ESTA FUNCIONANDO");
+        }
+        try {
+            if (x > y) {
+                return x;
+            } else if (y > x) {
+                return y;
+            }
+        } catch (Exception ignored) {}
+        return 0;
+    }
+
+    public static int getNextAccountNumber() {
+        String query = "SELECT account_number FROM natural_person ORDER BY account_number DESC LIMIT 1;";
+        String query2 = "SELECT account_number FROM legal_person ORDER BY account_number DESC LIMIT 1;";
+        int lastAccountNumberFromNaturalPerson = 0;
+        int lastAccountNumberFromLegalPerson = 0;
+        int accountNumber = 0;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet firstResult = stmt.executeQuery();
+            if (firstResult.next()) {
+                lastAccountNumberFromNaturalPerson = firstResult.getInt("account_number");
+            }
+            stmt.close();
+
+            stmt = connection.prepareStatement(query2);
+            ResultSet secondResult = stmt.executeQuery();
+            if (secondResult.next()) {
+                lastAccountNumberFromLegalPerson = secondResult.getInt("account_number");
+            }
+            stmt.close();
+
+            accountNumber = getHigherValue(lastAccountNumberFromLegalPerson, lastAccountNumberFromNaturalPerson) + 1;
+        } catch (Exception ex) {
+
+        }
+        return accountNumber;
+    }
 
     public static boolean remove(int accountNumber) {
         String strQuery = "DELETE FROM $tableName WHERE account_number = ?";
