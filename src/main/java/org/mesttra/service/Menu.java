@@ -208,9 +208,9 @@ public class Menu{
         int tipoCliente = getTipoCliente();
 
         if(tipoCliente==1){
-           naturalPersonDAO.getAllClients().forEach(System.out::println);
+           naturalPersonDAO.getAllClients().forEach((cliente) -> System.out.println(cliente.ToString()));
         }else{
-            legalPersonDAO.getAllClients().forEach(System.out::println);
+            legalPersonDAO.getAllClients().forEach((cliente) -> System.out.println(cliente.ToString()));
         }
     }
 
@@ -224,10 +224,10 @@ public class Menu{
 
         if(tipoCliente==1){
             NaturalPersonPOJO naturalPersonPOJO = naturalPersonDAO.findClientByAccountNumber(numeroConta);
-            System.out.println(naturalPersonPOJO);
+            System.out.println(naturalPersonPOJO.ToString());
         } else{
             LegalPersonPOJO legalPersonPOJO = legalPersonDAO.findClientByAccountNumber(numeroConta);
-            System.out.println(legalPersonPOJO);
+            System.out.println(legalPersonPOJO.ToString());
         }
 
     }
