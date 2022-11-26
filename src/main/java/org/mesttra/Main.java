@@ -7,7 +7,7 @@ public class Main {
 
         Menu menu = new Menu();
 
-        while(menu.inicio() !=9);
+        while(menu.inicio() != Menu.exitMenuOption);
 
     }
 }

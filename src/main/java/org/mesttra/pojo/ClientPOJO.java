@@ -74,4 +74,10 @@ public abstract class ClientPOJO {
                 "OverDraft: " + this.overDraft + "]"
         );
     };
+
+    public Comparable orderByAccountNumber(ClientPOJO clientPOJO){
+        return Integer.compare(this.accountNumber, clientPOJO.getAccountNumber());
+    }
+
+
 }

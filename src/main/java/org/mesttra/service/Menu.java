@@ -12,6 +12,7 @@ import java.util.*;
 
 public class Menu{
 
+    public static final int exitMenuOption = 8;
     private static Scanner input = new Scanner(System.in);
 
     private static List<ClientPOJO> listaCliente = new ArrayList<>();
@@ -28,13 +29,12 @@ public class Menu{
         System.out.println();
         System.out.println("1 - Cadastrar Cliente");
         System.out.println("2 - Remover Cliente");
-        System.out.println("3 - Consultar Cliente");
+        System.out.println("3 - Consultar cliente");
         System.out.println("4 - Alterar Limite");
         System.out.println("5 - Transferir");
         System.out.println("6 - Depositar");
         System.out.println("7 - Listar todos clientes");
-        System.out.println("8 - Buscar cliente por numero da conta");
-        System.out.println("9 - Sair");
+        System.out.println(exitMenuOption + " - Sair");
         System.out.println();
         System.out.println("==========================");
 
@@ -53,13 +53,12 @@ public class Menu{
         switch (entrada) {
             case 1 -> cadastrarCliente();
             case 2 -> removerCliente();
-            case 3 -> listarTodosClientes();
+            case 3 -> listarClientePorNumeroConta();
             case 4 -> alterarLimite();
             case 5 -> transferir();
             case 6 -> depositar();
             case 7 -> listarTodosClientes();
-            case 8 -> listarClientePorNumeroConta();
-            case 9 -> System.out.println("Obrigado por utilizar nosso sistema!");
+            case exitMenuOption -> System.out.println("Obrigado por utilizar nosso sistema!");
             default -> System.out.println("Opção inserida inválida!");
         }
         pressEnterToContinue();
@@ -205,13 +204,36 @@ public class Menu{
 
     public static void listarTodosClientes(){
         System.out.println("===== Listar todos os clientes ====");
-        int tipoCliente = getTipoCliente();
 
-        if(tipoCliente==1){
-            naturalPersonDAO.getAllClients().forEach((cliente) -> System.out.println(cliente.ToString()));
-        }else{
-            legalPersonDAO.getAllClients().forEach((cliente) -> System.out.println(cliente.ToString()));
+        List<ClientPOJO> clientes = new ArrayList<>();
+
+        List<NaturalPersonPOJO> naturalPersonPOJOS = naturalPersonDAO.getAllClients();
+        List<LegalPersonPOJO> legalPersonPOJOS = legalPersonDAO.getAllClients();
+
+        for (ClientPOJO cliente : naturalPersonPOJOS) {
+            clientes.add(cliente);
         }
+
+        for (ClientPOJO cliente : legalPersonPOJOS) {
+            clientes.add(cliente);
+        }
+
+        for (ClientPOJO cliente : clientes
+             ) {
+            System.out.println(cliente.ToString());
+        }
+
+//        clientes.addAll(naturalPersonDAO.getAllClients());
+//        clientes.addAll(legalPersonDAO.getAllClients());
+////        clientes.sort(new Comparator<ClientPOJO>() {
+//            @Override
+//            public int compare(ClientPOJO client1, ClientPOJO cliente2) {
+//                return Integer.compare(client1.getAccountNumber(), cliente2.getAccountNumber());
+//            }
+//        });
+
+//        clientes.forEach(cliente -> System.out.println(cliente.ToString()));
+
     }
 
     public static void listarClientePorNumeroConta(){
@@ -258,7 +280,16 @@ public class Menu{
         System.out.print("Valor a ser transferido: ");
         double valorTransferencia = entradaDouble();
 
-        ClientDAO.transferAmount(numeroContaDestino, numeroContaDestino, valorTransferencia);
+        double overDraft = ClientDAO.getOverDraft(numeroContaOrigem);
+        double amount = ClientDAO.getAmount(numeroContaOrigem);
+
+        boolean hasAmount = valorTransferencia <= overDraft + amount;
+
+        if (hasAmount) {
+            ClientDAO.transferAmount(numeroContaDestino, numeroContaDestino, valorTransferencia);
+        } else{
+            System.out.println("Saldo insuficiente para transação!");
+        }
 
     }
 

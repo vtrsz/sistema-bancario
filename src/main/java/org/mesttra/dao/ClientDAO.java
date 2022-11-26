@@ -112,6 +112,45 @@ public class ClientDAO {
         }
         return true;
     }
+    public static double getAmount(int accountNumber) {
+        String accountType = Operations.getClientTypeByAccountNumber(accountNumber);
+
+        String query = "SELECT amount FROM " + accountType + "WHERE account_number = ?";
+        double amount = 0;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setDouble(1, accountNumber);
+            ResultSet result = stmt.executeQuery();
+            if (result.next()) {
+                amount = result.getDouble("amount");
+            }
+            stmt.close();
+
+        } catch (Exception ex) {
+
+        }
+        return amount;
+    }
+
+    public static double getOverDraft(int accountNumber) {
+        String accountType = Operations.getClientTypeByAccountNumber(accountNumber);
+
+        String query = "SELECT over_draft FROM " + accountType + "WHERE account_number = ?";
+        double overDraft  = 0;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setDouble(1, accountNumber);
+            ResultSet result = stmt.executeQuery();
+            if (result.next()) {
+                overDraft = result.getDouble("over_draft");
+            }
+            stmt.close();
+
+        } catch (Exception ex) {
+
+        }
+        return overDraft;
+    }
 
     public static boolean addAmount(int accountNumber, double value) {
         String strQuery = "UPDATE $tableName SET amount = amount + ? WHERE account_number = ?";

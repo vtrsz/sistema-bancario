@@ -93,11 +93,12 @@ public class LegalPersonDAO {
         return client;
     }
 
-    private static void fillList(List<LegalPersonPOJO> clients, ResultSet result) throws SQLException {
+    private static List<LegalPersonPOJO> fillList(List<LegalPersonPOJO> clients, ResultSet result) throws SQLException {
         while (result.next()) {
             LegalPersonPOJO client = fillClient(result);
             clients.add(client);
         }
+        return clients;
     }
 }
 
