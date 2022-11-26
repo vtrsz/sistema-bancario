@@ -112,7 +112,7 @@ public class ClientDAO {
     public static double getAmount(int accountNumber) {
         String accountType = Operations.getClientTypeByAccountNumber(accountNumber);
 
-        String query = "SELECT amount FROM " + accountType + "WHERE account_number = ?";
+        String query = "SELECT amount FROM " + accountType + " WHERE account_number = ?";
         double amount = 0;
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -132,7 +132,7 @@ public class ClientDAO {
     public static double getOverDraft(int accountNumber) {
         String accountType = Operations.getClientTypeByAccountNumber(accountNumber);
 
-        String query = "SELECT over_draft FROM " + accountType + "WHERE account_number = ?";
+        String query = "SELECT over_draft FROM " + accountType + " WHERE account_number = ?";
         double overDraft  = 0;
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
