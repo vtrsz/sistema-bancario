@@ -7,7 +7,6 @@ import org.mesttra.pojo.ClientPOJO;
 import org.mesttra.pojo.LegalPersonPOJO;
 import org.mesttra.pojo.NaturalPersonPOJO;
 
-import java.awt.desktop.SystemSleepEvent;
 import java.io.IOException;
 import java.util.*;
 
@@ -74,7 +73,7 @@ public class Menu{
         try{
             return entrada = input.nextLine();
         } catch(NullPointerException e){
-            System.out.println("Valor inserido não pode ser nulo!");
+            System.err.println("Valor inserido não pode ser nulo!");
             e.printStackTrace();
         }
 
@@ -90,7 +89,7 @@ public class Menu{
             input.nextLine();
             return entrada;
         } catch (InputMismatchException e){
-            System.out.println("O valor inserido deve ser um número!");
+            System.err.println("O valor inserido deve ser um número!");
             input.nextLine();
         }
 
@@ -106,7 +105,7 @@ public class Menu{
             input.nextLine();
             return entrada;
         } catch (InputMismatchException e) {
-            System.out.println("O valor inserido deve ser um número inteiro!");
+            System.err.println("O valor inserido deve ser um número inteiro!");
             input.nextLine();
         }
         return 0;
@@ -199,7 +198,11 @@ public class Menu{
         System.out.print("Digite o número da conta: ");
         int numeroConta = entradaInteiro();
 
-        ClientDAO.remove(numeroConta);
+        try{
+            ClientDAO.remove(numeroConta);
+        } catch (NullPointerException e){
+        System.err.println("Cliente não existe no banco de dados!");
+    }
 
     }
 
@@ -216,6 +219,7 @@ public class Menu{
                 return Integer.compare(client1.getAccountNumber(), cliente2.getAccountNumber());
             }
         });
+
         clientes.forEach(cliente -> System.out.println(cliente.ToString()));
 
     }
@@ -228,12 +232,16 @@ public class Menu{
         System.out.print("Digite o número da conta: ");
         int numeroConta = entradaInteiro();
 
-        if(tipoCliente==1){
-            NaturalPersonPOJO naturalPersonPOJO = naturalPersonDAO.findClientByAccountNumber(numeroConta);
-            System.out.println(naturalPersonPOJO.ToString());
-        } else{
-            LegalPersonPOJO legalPersonPOJO = legalPersonDAO.findClientByAccountNumber(numeroConta);
-            System.out.println(legalPersonPOJO.ToString());
+        try{
+            if(tipoCliente==1){
+                NaturalPersonPOJO naturalPersonPOJO = naturalPersonDAO.findClientByAccountNumber(numeroConta);
+                System.out.println(naturalPersonPOJO.ToString());
+            } else{
+                LegalPersonPOJO legalPersonPOJO = legalPersonDAO.findClientByAccountNumber(numeroConta);
+                System.out.println(legalPersonPOJO.ToString());
+            }
+        } catch (NullPointerException e){
+            System.err.println("Cliente não existe no banco de dados!");
         }
 
     }
@@ -248,7 +256,11 @@ public class Menu{
         System.out.print("Digite o novo valor do cheque especial: ");
         double novoValorChequeEspecial = entradaDouble();
 
-        ClientDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
+        try{
+            ClientDAO.updateOverDraft(numeroConta, novoValorChequeEspecial);
+        } catch (NullPointerException e){
+            System.err.println("Cliente não existe no banco de dados!");
+        }
 
     }
 
@@ -264,15 +276,19 @@ public class Menu{
         System.out.print("Valor a ser transferido: ");
         double valorTransferencia = entradaDouble();
 
-        double overDraft = ClientDAO.getOverDraft(numeroContaOrigem);
-        double amount = ClientDAO.getAmount(numeroContaOrigem);
+        try {
+            double overDraft = ClientDAO.getOverDraft(numeroContaOrigem);
+            double amount = ClientDAO.getAmount(numeroContaOrigem);
 
-        boolean hasAmount = valorTransferencia <= overDraft + amount;
+            boolean hasAmount = valorTransferencia < overDraft + amount;
 
-        if (hasAmount) {
-            ClientDAO.transferAmount(numeroContaDestino, numeroContaDestino, valorTransferencia);
-        } else{
-            System.out.println("Saldo insuficiente para transação!");
+            if (hasAmount) {
+                ClientDAO.transferAmount(numeroContaOrigem, numeroContaDestino, valorTransferencia);
+            } else{
+                System.out.println("Saldo insuficiente para transação!");
+            }
+        } catch (NullPointerException e){
+            System.err.println("Cliente não existe no banco de dados!");
         }
 
     }
@@ -287,7 +303,11 @@ public class Menu{
         System.out.print("Digite o valor ");
         double valorDeposito = entradaDouble();
 
-        ClientDAO.addAmount(numeroConta, valorDeposito);
+        try{
+            ClientDAO.addAmount(numeroConta, valorDeposito);
+        } catch (NullPointerException e){
+            System.err.println("Cliente não existe no banco de dados!");
+        }
 
     }
 
@@ -299,7 +319,7 @@ public class Menu{
             input.nextLine();
         } catch(Exception e)
         {
-            System.out.println("Algo deu errado!");
+            System.err.println("Algo deu errado!");
         }
     }
 
@@ -310,7 +330,7 @@ public class Menu{
             else
                 System.out.print("\033\143"); //Limpa console em MacOS e Linux
         } catch (IOException | InterruptedException e){
-            System.out.println("Erro ao limpar o console!");
+            System.err.println("Erro ao limpar o console!");
         }
     }
 
